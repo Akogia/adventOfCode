@@ -1,7 +1,7 @@
-def calorieCounter():
+def calorieCounter(textfile):
     elves = []
     calorie = 0
-    with open('calories.txt', 'r') as f:
+    with open(textfile, 'r') as f:
         while True:
             line = f.readline()
             if line.strip() == '':
