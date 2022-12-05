@@ -21,8 +21,5 @@ def dayThree(textfile):
 if __name__ == '__main__':
     dayThree('input/rucksack.txt')
 
-    print(rucksackOrganiziation.getValue('r'))
-    print(rucksackOrganiziation.getValue('Z'))
-
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

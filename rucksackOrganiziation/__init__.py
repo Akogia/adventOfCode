@@ -1,6 +1,5 @@
 import fileReader
 
-
 def rucksackOrga(textfile):
     column = fileReader.fileReader(textfile)
     group = []
@@ -12,10 +11,10 @@ def rucksackOrga(textfile):
     while i <= len(group):
         if i + 3 > len(group):
             break
-        print("TADA")
         points += findSameLetterInGroup(group[i], group[i + 1], group[i + 2])
-        print(points)
         i += 3
+
+    print(points)
     ## first star
     # priority = 0
     # for line in column:
@@ -28,8 +27,7 @@ def rucksackOrga(textfile):
 
 def findSameLetterInGroup(str1, str2, str3):
     for a in str1:
-        if a in str2 and str3:
-            print(a)
+        if a in str2 and a in str3:
             return getValue(a)
 
 
