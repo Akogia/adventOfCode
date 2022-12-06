@@ -6,10 +6,10 @@ def tuningTrouble(textfile):
     print(len(line[0]))
     i = 0
     while i <= len(line[0]):
-        sub_str = line[0][i:i + 4]
+        sub_str = line[0][i:i + 14]
         if isUnique(sub_str):
             print(sub_str)
-            print(i)
+            print(i+14)
         i += 1
 
 
