@@ -12,17 +12,22 @@ def supplyStack(textfile):
     procedure = collectProcedures(column)
     maxProcedure = len(procedure[0])
     q = 0
+    var = []
     while q < maxProcedure:
         print(f"row: {procedure[0][q]} from {procedure[1][q]}  to {procedure[2][q]}")
+        print(f"Stacked Variable {var}")
+
         i = 0
         while i < int(procedure[0][q]):
             print(f"counter {i}")
-            var = stacks[int(procedure[1][q]) - 1][0]
+            var.append(stacks[int(procedure[1][q]) - 1][0])
             del stacks[int(procedure[1][q]) - 1][0]
-            print(f"Stacked Variable {var}")
-            stacks[int(procedure[2][q]) - 1].insert(0, var)
-            printResult(stacks)
             i += 1
+            print(f"Stacked Variable {var}")
+        while len(var) > 0:
+            stacks[int(procedure[2][q]) - 1].insert(0, var[-1])
+            var.pop()
+        printResult(stacks)
         q += 1
 
     for result in stacks:
