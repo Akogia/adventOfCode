@@ -5,5 +5,5 @@ def fileReader(textfile):
             line = f.readline()
             if not line:
                 break
-            column.append(line)
+            column.append(line.strip())
     return column

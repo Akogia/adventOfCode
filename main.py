@@ -5,6 +5,7 @@ import calorieCounter.calorie
 
 # Press the green button in the gutter to run the script.
 import rucksackOrganiziation
+import six
 import strategyGuide
 
 
@@ -30,7 +31,10 @@ def dayFour(textfile):
 def dayFive(textfile):
     five.supplyStack(textfile)
 
+def daySix(textfile):
+    six.tuningTrouble(textfile)
+
 
 if __name__ == '__main__':
-    dayFive('input/supplyStacks.txt')
+    daySix('input/tuningTrouble.txt')
 #
