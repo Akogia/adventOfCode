@@ -1,5 +1,6 @@
 # This is a sample Python script.
-import Four
+import five
+import four
 import calorieCounter.calorie
 
 # Press the green button in the gutter to run the script.
@@ -24,9 +25,12 @@ def dayThree(textfile):
 
 
 def dayFour(textfile):
-    Four.campCleanup(textfile)
+    four.campCleanup(textfile)
+
+def dayFive(textfile):
+    five.supplyStack(textfile)
 
 
 if __name__ == '__main__':
-    dayFour('input/campCleanup.txt')
+    dayFive('input/supplyStacks.txt')
 #
