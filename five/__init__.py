@@ -3,7 +3,14 @@ import utils
 
 
 def supplyStack(textfile):
-    column = fileReader.fileReader(textfile)
+    column = []
+
+    with open(textfile, 'r') as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            column.append(line)
 
     stacks = collectInStacks(column)
 

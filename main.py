@@ -9,32 +9,31 @@ import six
 import strategyGuide
 
 
-def dayOne(textfile):
-    result = calorieCounter.calorie.calorieCounter(textfile)
+def dayOne():
+    result = calorieCounter.calorie.calorieCounter('input/calories.txt')
     # first start
     print(result[0])
     # second start
     print(result[0] + result[1] + result[2])
 
 
-def dayTwo(textfile):
-    strategyGuide.tournament(textfile)
+def dayTwo():
+    strategyGuide.tournament('input/strategyGuide.txt')
 
 
-def dayThree(textfile):
-    rucksackOrganiziation.rucksackOrga(textfile)
+def dayThree():
+    rucksackOrganiziation.rucksackOrga('input/rucksack.txt')
 
 
-def dayFour(textfile):
-    four.campCleanup(textfile)
+def dayFour():
+    four.campCleanup('input/campCleanup.txt')
 
-def dayFive(textfile):
-    five.supplyStack(textfile)
+def dayFive():
+    five.supplyStack('input/supplyStacks.txt')
 
-def daySix(textfile):
-    six.tuningTrouble(textfile)
+def daySix():
+    six.tuningTrouble('input/tuningTrouble.txt')
 
 
 if __name__ == '__main__':
-    daySix('input/tuningTrouble.txt')
-#
+    dayFive()
