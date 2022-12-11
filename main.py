@@ -5,6 +5,7 @@ import calorieCounter.calorie
 
 # Press the green button in the gutter to run the script.
 import rucksackOrganiziation
+import seven
 import six
 import strategyGuide
 
@@ -32,8 +33,13 @@ def dayFive():
     five.supplyStack('input/supplyStacks.txt')
 
 def daySix():
-    six.tuningTrouble('input/tuningTrouble.txt')
+    # six.tuningTrouble('input/tuningTrouble.txt')
+    six.alternativ.alternatvi('input/tuningTrouble.txt')
+
+def daySeven():
+    seven.noSpaceLeftOnDevice('input/noSpaceLeftOnDevice.txt')
 
 
 if __name__ == '__main__':
-    dayFive()
+    # daySeven()
+    daySix()
