@@ -15,7 +15,5 @@ class Directory:
 
     def get_directory(self, dires: str):
         for dire in self.directories:
-            print(type(dire))
-            print(dire.name)
             if dire.name == dires:
                 return dire
