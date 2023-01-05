@@ -5,6 +5,7 @@ import four
 import calorieCounter.calorie
 
 # Press the green button in the gutter to run the script.
+import nine
 import rucksackOrganiziation
 import seven
 import six
@@ -46,6 +47,9 @@ def daySeven():
 def dayEight():
     eight.main('input/day8.txt')
 
+def dayNine():
+    nine.main('input/day9.txt')
+
 
 if __name__ == '__main__':
-     dayEight()
+     dayNine()
