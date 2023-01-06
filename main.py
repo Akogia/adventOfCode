@@ -10,6 +10,7 @@ import rucksackOrganiziation
 import seven
 import six
 import strategyGuide
+import ten
 
 
 def dayOne():
@@ -50,6 +51,9 @@ def dayEight():
 def dayNine():
     nine.main('input/day9.txt')
 
+def dayTen():
+    ten.main('input/day10.txt')
+
 
 if __name__ == '__main__':
-     dayNine()
+     dayTen()
