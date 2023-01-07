@@ -12,6 +12,7 @@ def calculate_signal_strength(instructions: list):
     result = 0
     signal = 1
     i = 0
+    draw_crt(crt, i, signal)
     for instruction in instructions:
         if instruction[0] == 'noop':
             i += 1
@@ -21,18 +22,21 @@ def calculate_signal_strength(instructions: list):
             draw_crt(crt, i, signal)
             i += 1
         result += check_signal(i, signal)
-        draw_crt(crt, i, signal)
         signal += instruction[1]
+        draw_crt(crt, i, signal)
+
     print(result)
     [print(row) for row in crt]
+    [print(len(row)) for row in crt]
+
 
 def draw_crt(crt: list, iteration: int, signal: int):
     sprite = [signal - 1, signal, signal + 1]
     draw = '.'
-    if iteration in sprite:
-        draw = '#'
     match int(iteration / 40):
         case 0:
+            if iteration in sprite:
+                draw = '#'
             crt[0].append(draw)
         case 1:
             if iteration - 40 in sprite:
