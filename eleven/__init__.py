@@ -9,18 +9,21 @@ def main(textfile):
     monkey = read_monkey(column)
     modulus = get_modulus(monkey)
     for i in range(10000):
-        print(i)
         for monk in monkey:
             for j in monk[1]:
-                worry = worry_level(j, monk[2]) % modulus
+                worry = worry_level(j, monk[2])
                 # print(f'WORRY: {worry}')
                 if j % monk[3] == 0:
-                    monkey[monk[4]][1].append(worry)
+                    monkey[monk[4]][1].append(worry % modulus)
                 else:
-                    monkey[monk[5]][1].append(worry)
+                    monkey[monk[5]][1].append(worry % modulus)
             monk[0] += len(monk[1])
             monk[1].clear()
-    [print(monk) for monk in monkey]
+    result = []
+    for monk in monkey:
+        result.append(monk[0])
+    result.sort()
+    print(result[-1] * result[-2])
 
 
 def get_modulus(monkey) -> int:
@@ -42,8 +45,8 @@ def worry_level(item: int, operands: list) -> int:
 
 
 def read_monkey(column) -> list[list]:
-    # monkey = [[], [], [], [], [], [], [], []]
-    monkey = [[], [], [], []]
+    monkey = [[], [], [], [], [], [], [], []]
+    # monkey = [[], [], [], []]
     i = 0
     for row in column:
         r = row.split(' ')

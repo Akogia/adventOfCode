@@ -60,7 +60,7 @@ def dayTen():
 
 
 def dayEleven():
-    eleven.main('input/day11test.txt')
+    eleven.main('input/day11.txt')
 
 
 if __name__ == '__main__':
