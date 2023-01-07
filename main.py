@@ -49,12 +49,12 @@ def dayEight():
     eight.main('input/day8.txt')
 
 def dayNine():
-    nine.main('input/day9test.txt')
+    nine.main('input/day9.txt')
 
 def dayTen():
     ten.main('input/day10.txt')
 
 
 if __name__ == '__main__':
-    dayTen()
+    dayNine()
 
