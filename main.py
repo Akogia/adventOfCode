@@ -1,5 +1,6 @@
 # This is a sample Python script.
 import eight
+import eleven
 import five
 import four
 import calorieCounter.calorie
@@ -43,18 +44,24 @@ def daySix():
 
 
 def daySeven():
-    seven.noSpaceLeftOnDevice('input/noSpaceLeftOnDevice.txt')
+    seven.noSpaceLeftOnDevice('input/day7.txt')
+
 
 def dayEight():
     eight.main('input/day8.txt')
 
+
 def dayNine():
     nine.main('input/day9.txt')
+
 
 def dayTen():
     ten.main('input/day10.txt')
 
 
-if __name__ == '__main__':
-    dayNine()
+def dayEleven():
+    eleven.main('input/day11.txt')
 
+
+if __name__ == '__main__':
+    dayEleven()
