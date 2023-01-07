@@ -7,21 +7,28 @@ import re
 def main(textfile):
     column = fileReader.fileReader(textfile)
     monkey = read_monkey(column)
-    # [print(monk) for monk in monkey]
-    i = 0
-    for i in range(20):
+    modulus = get_modulus(monkey)
+    for i in range(10000):
         print(i)
         for monk in monkey:
             for j in monk[1]:
-                worry = math.floor(worry_level(j, monk[2])/3)
-                if worry % monk[3] == 0:
+                worry = worry_level(j, monk[2]) % modulus
+                # print(f'WORRY: {worry}')
+                if j % monk[3] == 0:
                     monkey[monk[4]][1].append(worry)
                 else:
                     monkey[monk[5]][1].append(worry)
             monk[0] += len(monk[1])
             monk[1].clear()
-        [print(monk) for monk in monkey]
-        print('-----------------------')
+    [print(monk) for monk in monkey]
+
+
+def get_modulus(monkey) -> int:
+    modulus = 1
+    for monk in monkey:
+        modulus *= monk[3]
+    print(modulus)
+    return modulus
 
 
 def worry_level(item: int, operands: list) -> int:
@@ -35,8 +42,8 @@ def worry_level(item: int, operands: list) -> int:
 
 
 def read_monkey(column) -> list[list]:
-    monkey = [[], [], [], [], [], [], [], []]
-    # monkey = [[], [], [], []]
+    # monkey = [[], [], [], [], [], [], [], []]
+    monkey = [[], [], [], []]
     i = 0
     for row in column:
         r = row.split(' ')
