@@ -3,22 +3,33 @@ import fileReader
 
 def main(textfile):
     instructions = get_data(fileReader.fileReader(textfile))
-    [print(ins) for ins in instructions]
+    # [print(ins) for ins in instructions]
     calculate_signal_strength(instructions)
 
 
 def calculate_signal_strength(instructions: list):
+    result = 0
     signal = 1
     i = 0
     for instruction in instructions:
         if instruction[0] == 'noop':
             i += 1
         else:
-            i += 2
+            i += 1
+            result += check_signal(i, signal)
+            i += 1
+        result += check_signal(i, signal)
         signal += instruction[1]
-        if i % 20 == 0:
-            result = i * signal
-            print(result)
+    print(result)
+
+
+def check_signal(iteration, signal) -> int:
+    result = iteration * signal
+    if (iteration - 20) == 0 or (iteration - 20) % 40 == 0:
+        print(f'iteration {iteration} with the signal {signal} and result {result}')
+        return result
+    else:
+        return 0
 
 
 def get_data(columns) -> list[list]:
