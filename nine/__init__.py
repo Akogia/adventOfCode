@@ -9,9 +9,13 @@ def main(textfile):
 
 def set_field(rows):
     head = [(0, 0)]
-    tail = [(0, 0)]
+    tail = []
+    for i in range(9):
+        tail.append([i])
+        tail[i] = [(0, 0)]
+    # tail = [(0, 0)]
     visited_field = set()
-    visited_field.add(tail[0])
+    visited_field.add(tail[-1][-1])
 
     for row in rows:
         direction = row[0]
@@ -20,7 +24,8 @@ def set_field(rows):
 
     print(len(visited_field))
     # [print(field) for field in visited_field]
-    #[print(tai) for tai in tail]
+    # [print(tai) for tai in tail]
+
 
 def move_head(head, direction, steps, visited_field, tail):
     # print(f'head will move in direction: {direction} with {steps} steps')
@@ -34,30 +39,34 @@ def move_head(head, direction, steps, visited_field, tail):
                 head.append((head[-1][0], head[-1][1] + 1))
             case 'D':
                 head.append((head[-1][0], head[-1][1] - 1))
-        update_tail(head, tail, visited_field)
-        print(f'this is the head position {head[-1]} and tail: {tail[-1]}')
+        for i in range(len(tail)):
+            if i == 0:
+                update_tail(head, tail[0])
+            else:
+                update_tail(tail[i - 1], tail[i])
+        visited_field.add(tail[-1][-1])
+        # print(f'this is the head position {head[-1]} and tail: {tail[-1]}')
 
 
-def update_tail(head, tail, visited_field):
+def update_tail(head, tail):
     # print(f'Current Head Position: {head[-1]} and tail position {tail[-1]}')
     x_diff = head[-1][0] - tail[-1][0]
     y_diff = head[-1][1] - tail[-1][1]
-    print(f' this is the difference: head [{head[-1][0]}/{head[-1][1]}] and tail [{tail[-1][0]}/{tail[-1][1]}]')
+    # print(f' this is the difference: head [{head[-1][0]}/{head[-1][1]}] and tail [{tail[-1][0]}/{tail[-1][1]}]')
     # RESULT 5846 is too low and 6156 is too high
     if abs(x_diff) > 1 or abs(y_diff) > 1:
         # print(f'Tail moves')
         move_tail(x_diff, y_diff, tail)
-        visited_field.add(tail[-1])
 
 
 def move_tail(x_diff, y_diff, tail):
     if (abs(x_diff) + abs(y_diff)) % 2 != 0:
-        print(f'diagonaler Schritt with x {x_diff} and y {y_diff}')
+        # print(f'diagonaler Schritt with x {x_diff} and y {y_diff}')
         tail_move_diagonal(x_diff, y_diff, tail)
     else:
-        print(f'straight with x {x_diff} and y {y_diff}')
+        # print(f'straight with x {x_diff} and y {y_diff}')
         tail_move_straight(x_diff, y_diff, tail)
-    print(f'This is the updated tail which shall be saved in the set: {tail[-1]}')
+    # print(f'This is the updated tail which shall be saved in the set: {tail[-1]}')
 
 
 def tail_move_diagonal(x_diff, y_diff, tail):
@@ -88,5 +97,4 @@ def tail_move_straight(x_diff, y_diff, tail):
         # print(f'down')
         tail.append((tail[-1][0], tail[-1][1] - 1))
     elif y_diff > 0:
-        # print(f'up')
         tail.append((tail[-1][0], tail[-1][1] + 1))
