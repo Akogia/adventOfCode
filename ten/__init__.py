@@ -3,7 +3,6 @@ import fileReader
 
 def main(textfile):
     instructions = get_data(fileReader.fileReader(textfile))
-    # [print(ins) for ins in instructions]
     calculate_signal_strength(instructions)
 
 
@@ -27,7 +26,6 @@ def calculate_signal_strength(instructions: list):
 
     print(result)
     [print(row) for row in crt]
-    [print(len(row)) for row in crt]
 
 
 def draw_crt(crt: list, iteration: int, signal: int):
