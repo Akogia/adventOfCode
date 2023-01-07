@@ -8,6 +8,7 @@ def main(textfile):
 
 
 def calculate_signal_strength(instructions: list):
+    crt = [[], [], [], [], [], []]
     result = 0
     signal = 1
     i = 0
@@ -17,10 +18,42 @@ def calculate_signal_strength(instructions: list):
         else:
             i += 1
             result += check_signal(i, signal)
+            draw_crt(crt, i, signal)
             i += 1
         result += check_signal(i, signal)
+        draw_crt(crt, i, signal)
         signal += instruction[1]
     print(result)
+    [print(row) for row in crt]
+
+def draw_crt(crt: list, iteration: int, signal: int):
+    sprite = [signal - 1, signal, signal + 1]
+    draw = '.'
+    if iteration in sprite:
+        draw = '#'
+    match int(iteration / 40):
+        case 0:
+            crt[0].append(draw)
+        case 1:
+            if iteration - 40 in sprite:
+                draw = '#'
+            crt[1].append(draw)
+        case 2:
+            if iteration - 80 in sprite:
+                draw = '#'
+            crt[2].append(draw)
+        case 3:
+            if iteration - 120 in sprite:
+                draw = '#'
+            crt[3].append(draw)
+        case 4:
+            if iteration - 160 in sprite:
+                draw = '#'
+            crt[4].append(draw)
+        case 5:
+            if iteration - 200 in sprite:
+                draw = '#'
+            crt[5].append(draw)
 
 
 def check_signal(iteration, signal) -> int:
