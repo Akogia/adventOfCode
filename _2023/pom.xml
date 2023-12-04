@@ -24,6 +24,11 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <artifactId>kotlin-compiler</artifactId>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <version>1.9.21</version>
+        </dependency>
     </dependencies>
 
     <build>
