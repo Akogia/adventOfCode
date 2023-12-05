@@ -3,6 +3,7 @@ package dayFive
 import java.io.File
 
 var seed = longArrayOf()
+var seeds = mutableListOf<LongArray>()
 var seedToSoil = mutableListOf<LongArray>()
 var soilToFertilizer = mutableListOf<LongArray>()
 var fertilizerToWater = mutableListOf<LongArray>()
@@ -26,51 +27,59 @@ fun main() {
     for (content in splittedContent) {
         splitFileContent(content)
     }
-
+    //redefineSeeds()
     calculate()
-
     //println(counter)
 
+}
+
+fun redefineSeeds() {
+    for (i in seed.indices step 2) {
+        val rangeArray = LongArray(seed[i+1].toInt()) { it.toLong() + seed[i] }
+        seeds.add(rangeArray)
+    }
 }
 
 fun calculate () {
     var minLocation = Long.MAX_VALUE
 
-    for (seed in seed) {
-
-        s2S = mappedNumber(seed, seedToSoil)
-        //print("seed: $seed, location after seedToSoil: ${s2S.contentToString()},")
-        for ( soil in s2S ){
-            s2F = mappedNumber(soil, soilToFertilizer)
-            //print("location after soilToFertilizer: ${s2F.contentToString()},")
-        }
-        for ( fertilizer in s2F ){
-            f2W = mappedNumber(fertilizer, fertilizerToWater)
-            //print("location after fertilizerToWater: ${f2W.contentToString()},")
-        }
-        for ( water in f2W ){
-            w2L = mappedNumber(water, waterToLight)
-            //print("location after waterToLight: ${w2L.contentToString()},")
-        }
-        for ( light in w2L ){
-            l2T = mappedNumber(light, lightToTemperature)
-            //print("location after lightToTemperature: ${l2T.contentToString()},")
-        }
-        for ( temperature in l2T ){
-            t2H = mappedNumber(temperature, temperatureToHumidity)
-            //print("location after humidityToLocation: ${h2L.contentToString()},")
-        }
-        for ( humidity in t2H ){
-            h2L = mappedNumber(humidity, humidityToLocation)
-            //print("location after humidityToLocation: ${h2L.contentToString()},")
-        }
-        for ( location in h2L ){
-            if (location < minLocation) {
-                println("new min location: $location")
-                minLocation = location
+    for (i in seed.indices step 2) {
+        val rangeArray = LongArray(seed[i+1].toInt()) { it.toLong() + seed[i] }
+        for ( s in rangeArray) {
+            s2S = mappedNumber(s, seedToSoil)
+            //print("seed: $s, location after seedToSoil: ${s2S.contentToString()},")
+            for ( soil in s2S ){
+                s2F = mappedNumber(soil, soilToFertilizer)
+                //print("location after soilToFertilizer: ${s2F.contentToString()},")
+            }
+            for ( fertilizer in s2F ){
+                f2W = mappedNumber(fertilizer, fertilizerToWater)
+                //print("location after fertilizerToWater: ${f2W.contentToString()},")
+            }
+            for ( water in f2W ){
+                w2L = mappedNumber(water, waterToLight)
+                //print("location after waterToLight: ${w2L.contentToString()},")
+            }
+            for ( light in w2L ){
+                l2T = mappedNumber(light, lightToTemperature)
+                //print("location after lightToTemperature: ${l2T.contentToString()},")
+            }
+            for ( temperature in l2T ){
+                t2H = mappedNumber(temperature, temperatureToHumidity)
+                //print("location after humidityToLocation: ${h2L.contentToString()},")
+            }
+            for ( humidity in t2H ){
+                h2L = mappedNumber(humidity, humidityToLocation)
+                //print("location after humidityToLocation: ${h2L.contentToString()},")
+                //println("")
+            }
+            for ( location in h2L ){
+                if (location < minLocation) {
+                    println("new min location: $location")
+                    minLocation = location
+                }
             }
         }
-
     }
 
     print("min location: $minLocation")
