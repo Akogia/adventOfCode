@@ -11,8 +11,6 @@ var gear = mutableMapOf<Int, Int>()
 fun main() {
     val fileContent = File("_2023/src/main/resources/dayThree.txt").readText(Charsets.UTF_8).split("\n")
 
-
-
     for (i in fileContent.indices) {
         for (j in fileContent[i].indices) {
             if (fileContent[i][j].isDigit()) {
@@ -28,10 +26,8 @@ fun main() {
             }
         }
     }
-
     println(sum)
 }
-
 
 fun checkAdjecentSymbol(schematic: List<String>,
                         indices: List<Pair<Int, Int>>,
