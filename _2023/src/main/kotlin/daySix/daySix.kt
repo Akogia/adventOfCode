@@ -9,15 +9,10 @@ fun main() {
     val distance = splitted[1][1].trim().replace("\\s+".toRegex(), "").toLong()
     println(time)
     println(distance)
-
-
-    println("time: ${time}")
     var counter = 0
     for (j in 1 until time.toLong()+1) {
         var distance1 = (time.toLong()-j)*j
         if (distance1 > distance) {
-            println("distance1: $distance1")
-            println("j: $j")
             counter += 1
         }
     }
