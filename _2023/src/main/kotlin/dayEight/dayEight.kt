@@ -2,7 +2,7 @@ package dayEight
 
 import java.io.File
 
-data class Node(val node: String, val left: String, val right: String)
+data class Node(var node: String, val left: String, val right: String)
 
 fun main () {
     val fileContent = File("_2023/src/main/resources/dayEight.txt").readText(Charsets.UTF_8).split("\n")
@@ -19,21 +19,36 @@ fun main () {
 }
 
 fun followInstructions(nodes: List<Node>, instructions: String) {
-    var currentNode = nodes.first { it.node == "AAA" }
-    var counter = 0
+    var currentNodes = nodes.filter { it.node.endsWith('A') }.toMutableList()
+    var counter = 0.toLong()
     var index = 0
-    println("index max: ${instructions.length}")
-    while (currentNode.node != "ZZZ") {
+    //println("index max: ${instructions.length}")
+    // check if for every current node the last letter is Z
+    val nodesMap = mutableMapOf<Node, Long>()
+    while (!currentNodes.all { it.node.endsWith('Z') }) {
+        val node : Node
+
         if(index == instructions.length) {
             index = 0
         }
-        currentNode = when (instructions[index]) {
-            'L' -> nodes.first { it.node == currentNode.left }
-            else -> nodes.first { it.node == currentNode.right }
+        println("currentNodes: $currentNodes")
+        val listNodes = currentNodes.map { currentNode ->
+            when (instructions[index]) {
+                'L' ->  nodes.first { it.node == currentNode.left }
+                else -> nodes.first { it.node == currentNode.right }
+        }}.toMutableList()
+        if (listNodes.any { it.node.endsWith('Z') }) {
+            node = listNodes.first { it.node.endsWith('Z') }
+            nodesMap.put(node, counter + 1)
+            listNodes.remove(node)
         }
         index++
         counter++
+        currentNodes = listNodes.toMutableList()
+
+        println("counter: $counter")
     }
+    println("nodesMap: $nodesMap")
     println(counter)
-    println(currentNode)
+    println(currentNodes)
 }
