@@ -10,7 +10,7 @@ fun main() {
         val differenceList = mutableListOf<IntArray>()
         differenceList.add(element)
         val result = createDifferenceList(element,  differenceList)
-        sum += extrapolate(result)
+        sum += extrapolateFromStart(result)
     }
     println(sum)
 
@@ -25,6 +25,15 @@ fun extrapolate(result: MutableList<IntArray>): Int {
         result[i][result[i].size - 1] = lastElement
     }
     return result[0].last()
+}
+
+fun extrapolateFromStart(result: MutableList<IntArray>): Int {
+    var firstElement = result.last().first()
+    for (i in result.size - 2 downTo 0) {
+        result[i][0] = result[i].first() - firstElement
+        firstElement = result[i].first()
+    }
+    return result[0].first()
 }
 
 fun createDifferenceList(sensorValues: IntArray, input:  MutableList<IntArray>): MutableList<IntArray> {
