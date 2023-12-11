@@ -1,6 +1,7 @@
 package dayEleven
 
 import java.io.File
+import kotlin.math.abs
 
 fun main() {
     val fileContent = File("_2023/src/main/resources/dayEleven.txt").readText(Charsets.UTF_8).split("\n")
@@ -15,44 +16,32 @@ fun main() {
         }
     }
     // get rows and columns in which the galaxy is not located
-    val emptyRows = fileContent.indices.filter { it -> it !in galaxyLocation.map { it.first }.toIntArray()}
+    val emptyRows = fileContent.indices.filter { it -> it !in galaxyLocation.map { it.first }}.toIntArray()
     val emptyColumns = fileContent.indices.filter { it -> it !in galaxyLocation.map { it.second }.toIntArray()}
-    //println("rows: $emptyRows")
-    //println("columns: $emptyColumns")
 
-    //println("galaxy: $galaxyLocation")
-
-    galaxyLocation = galaxyLocation.map { pair ->
-        val shiftedRow = emptyRows.count { it < pair.first }
-        val shiftedColumn = emptyColumns.count { it < pair.second }
-        Pair(pair.first + shiftedRow, pair.second + shiftedColumn)
+    val newGalaxyLocation = galaxyLocation.map { pair ->
+        var shiftedRow = emptyRows.count { it < pair.first }
+        var shiftedColumn = emptyColumns.count { it < pair.second }
+        if (shiftedRow != 0 ) {
+            shiftedRow *= (1000000 - 1)
+        }
+        if (shiftedColumn != 0 ) {
+            shiftedColumn *= (1000000 - 1)
+        }
+        Pair((pair.first + shiftedRow).toLong(), (pair.second + shiftedColumn).toLong())
     }.toMutableList()
 
-    //println("after shifting :galaxyLocation $galaxyLocation")
-    // iterate through each galaxy and calculate the shortest path to the other galaxies
-    var sum = 0
-    var test = 0
-    for (i in 0 until galaxyLocation.size) {
-        var shortestPath = Int.MAX_VALUE
-
-        for (j in 0 until galaxyLocation.size) {
-            if (i == j) {
-                continue
-            }
-            println("galaxy ${galaxyLocation[i]} to galaxy ${galaxyLocation[j]}")
-            val path = calculateShortestPath(galaxyLocation[i], galaxyLocation[j])
-            println("path: $path")
-            test += path
-            if (path < shortestPath) {
-                shortestPath = path
-            }
+    var sum = 0.toLong()
+    for (i in 0 until newGalaxyLocation.size) {
+        for (j in i+1 until newGalaxyLocation.size) {
+            val path = calculateShortestPath(newGalaxyLocation[i], newGalaxyLocation[j])
+            //println("path: $path")
+            sum += path
         }
-        sum += shortestPath
     }
     println(sum)
-    println(test/2)
 }
 
-fun calculateShortestPath(firstGalaxy: Pair<Int,Int>, secondGalaxy: Pair<Int, Int>): Int {
-    return Math.abs(firstGalaxy.first - secondGalaxy.first) + Math.abs(firstGalaxy.second - secondGalaxy.second)
+fun calculateShortestPath(firstGalaxy: Pair<Long,Long>, secondGalaxy: Pair<Long, Long>): Long {
+    return (abs(firstGalaxy.first - secondGalaxy.first) + abs(firstGalaxy.second - secondGalaxy.second)).toLong()
 }
