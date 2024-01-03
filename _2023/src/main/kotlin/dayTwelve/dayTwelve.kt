@@ -3,33 +3,57 @@ package dayTwelve
 import java.io.File
 
 fun main () {
-    val fileContent = File("_2023/src/main/resources/dayTwelve.txt").readText(Charsets.UTF_8).split("\n")
-    var mis = 0L
-    for (instruction in fileContent) {
-        val (line, springs) = instruction.split(" ")
-        val springsArray = springs.split(",").map { it.toInt() }.toIntArray()
-        mis += generateAndCheckCombinations(line, springsArray)
+    val fileContent = File("_2023/src/main/resources/dayTwelve.txt").readText(Charsets.UTF_8).split("\n").toMutableList()
+
+    val result = fileContent.map { parseRow(it) }.map { unfold(it) }.sumOf { (line, springs) ->
+        checkCombinations(line, springs)
     }
-    println("mis: $mis")
+    println(result)
 }
+private fun parseRow(input: String): Pair<String, List<Int>> =
+        input.split(" ").run {
+            first() to last().split(",").map { it.toInt() }
+        }
 
-fun generateAndCheckCombinations(input: String, springs: IntArray): Long {
-    if (!input.contains("?")) {
-        return if (compareString(input.split(".").filter { it.isNotEmpty() }, springs)) 1 else 0
+private fun unfold(input: Pair<String,List<Int>>): Pair<String,List<Int>> =
+        (0..4).joinToString("?") {input.first} to (0..4).flatMap { input.second }
+fun checkCombinations(
+        line: String,
+        springs: List<Int>,
+        cache: MutableMap<Pair<String,List<Int>>,Long> = HashMap()
+    ): Long {
+    val key = line to springs
+    cache[key]?.let {
+        return it
     }
+    if (line.isEmpty()) return if (springs.isEmpty()) 1 else 0
 
-    val dotCombination = input.replaceFirst("?", ".")
-    val hashCombination = input.replaceFirst("?", "#")
+    return when (line.first()) {
+        '.' -> checkCombinations(line.dropWhile { it == '.' }, springs, cache)
 
-    return generateAndCheckCombinations(dotCombination, springs) + generateAndCheckCombinations(hashCombination, springs)
-}
+        '?' -> checkCombinations(line.substring(1), springs, cache) +
+                checkCombinations("#${line.substring(1)}", springs, cache)
 
-fun compareString(currentLine: List<String>, springs: IntArray): Boolean {
-    if (currentLine.size != springs.size) return false
-    for ((i, line) in currentLine.withIndex()) {
-        if (line.length != springs[i]) {
-            return false
+        '#' -> when {
+            springs.isEmpty() -> 0
+            else -> {
+                val thisSprings = springs.first()
+                val remainingSprings = springs.drop(1)
+                if (thisSprings <= line.length && line.take(thisSprings).none { it == '.' }) {
+                    when {
+                        thisSprings == line.length -> if (remainingSprings.isEmpty()) 1 else 0
+                        line[thisSprings] == '#' -> 0
+                        else -> checkCombinations(line.drop(thisSprings + 1), remainingSprings, cache)
+                    }
+                } else 0
+            }
+        }
+
+        else -> throw IllegalStateException("Invalid line: $line")
+        }
+    .apply {
+            cache[key] = this
         }
     }
-    return true
-}
+
+
