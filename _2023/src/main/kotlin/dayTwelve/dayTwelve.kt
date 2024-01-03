@@ -8,40 +8,28 @@ fun main () {
     for (instruction in fileContent) {
         val (line, springs) = instruction.split(" ")
         val springsArray = springs.split(",").map { it.toInt() }.toIntArray()
-        val currentLine = line
-        val combinations = generateCombinations(currentLine)
-        combinations.forEach { println(it) }
-        var counter = 0L
-        val list = mutableListOf<List<String>>()
-        combinations.forEach { comb ->
-            var combos = comb.split(".").filter { it.isNotEmpty() }
-            if( combos.size == springsArray.size) {
-                list.add(combos)
-            }
-        }
-        list.forEach {
-            if ( compareString(it, springsArray)) {
-                counter++
-            }
-        }
-        mis += counter
+        mis += generateAndCheckCombinations(line, springsArray)
     }
     println("mis: $mis")
 }
 
-fun compareString(currentLine: List<String>, springs: IntArray): Boolean {
-    for ((i, line) in currentLine.withIndex()) {
-        if ( line.length != springs[i]) {
-            return false
-        }
+fun generateAndCheckCombinations(input: String, springs: IntArray): Long {
+    if (!input.contains("?")) {
+        return if (compareString(input.split(".").filter { it.isNotEmpty() }, springs)) 1 else 0
     }
-    return true
-}
-fun generateCombinations(input: String): List<String> {
-    if (!input.contains("?")) return listOf(input)
 
     val dotCombination = input.replaceFirst("?", ".")
     val hashCombination = input.replaceFirst("?", "#")
 
-    return generateCombinations(dotCombination) + generateCombinations(hashCombination)
+    return generateAndCheckCombinations(dotCombination, springs) + generateAndCheckCombinations(hashCombination, springs)
+}
+
+fun compareString(currentLine: List<String>, springs: IntArray): Boolean {
+    if (currentLine.size != springs.size) return false
+    for ((i, line) in currentLine.withIndex()) {
+        if (line.length != springs[i]) {
+            return false
+        }
+    }
+    return true
 }
