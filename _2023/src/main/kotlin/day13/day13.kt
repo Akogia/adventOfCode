@@ -15,15 +15,17 @@ private fun getMirrorPattern (pattern: List<String>): Int =
     throw Exception("No mirror pattern found")
 
 private fun List<String>.mirrorHorizontalPattern(): Int? {
+    println("this Horizontal: $this")
     return isMirrored(this.columnToString())?.first?.plus(1)?.times(100)
 }
 private fun List<String>.mirrorVerticalPattern(): Int? {
+    println("this Vertical: $this")
     return isMirrored(this)?.first?.plus(1)
 }
 
 
 private fun isMirrored(pattern: List<String>): Pair<Int,Int>? {
-    val mirrorIndices = findMirrorIndices(pattern[0])
+    val mirrorIndices = findMirrorIndices(pattern.subList(0,2))
     for (mirrorIndex in mirrorIndices) {
         if (validateMirrorIndices(mirrorIndex, pattern) != null) {
             return mirrorIndex
@@ -34,33 +36,39 @@ private fun isMirrored(pattern: List<String>): Pair<Int,Int>? {
 
 fun validateMirrorIndices (mirrorIndex: Pair<Int, Int>, pattern: List<String>): Pair<Int,Int>? {
     val range = createRanges(mirrorIndex.first, pattern[0].length-1)
+    var smudge = 0;
+    println("range: $range, mirrorIndex: $mirrorIndex, pattern: $pattern")
     for (i in pattern.indices) {
         for (j in range) {
             if (pattern[i][j.first] != pattern[i][j.second]) {
-                return null
+                println(" pattern[i][j.first]  ${pattern[i][j.first]} != pattern[i][j.second] ${pattern[i][j.second]}")
+                smudge++
             }
         }
     }
-    return mirrorIndex
+    println("smudge: $smudge")
+    return if (smudge == 1) mirrorIndex else null
 }
 
 private fun createRanges (start: Int, max: Int): List<Pair<Int,Int>> =
         (start downTo 0).zip((start+1)..max)
 
-fun findMirrorIndices (s: String): Set<Pair<Int, Int>> {
+fun findMirrorIndices (pattern: List<String>): Set<Pair<Int, Int>> {
     val mirrorIndices = mutableSetOf<Pair<Int, Int>>()
-    for (i in 1 until s.length/2) {
-        val left = s.substring(0, i)
-        val right = s.substring(i, i+i)
-        if (left == right.reversed()) {
-            mirrorIndices.add(Pair(i - 1, i))
+    for ( s in pattern) {
+        for (i in 1 until s.length/2+1) {
+            val left = s.substring(0, i)
+            val right = s.substring(i, i+i)
+            if (left == right.reversed()) {
+                mirrorIndices.add(Pair(i - 1, i))
+            }
         }
-    }
-    for (i in s.length-1 downTo  s.length/2+1) {
-        val left = s.substring(i - (s.length - i), i)
-        val right = s.substring(i, s.length)
-        if (left == right.reversed()) {
-            mirrorIndices.add(Pair(i - 1, i))
+        for (i in s.length-1 downTo  s.length/2+1) {
+            val left = s.substring(i - (s.length - i), i)
+            val right = s.substring(i, s.length)
+            if (left == right.reversed()) {
+                mirrorIndices.add(Pair(i - 1, i))
+            }
         }
     }
     return mirrorIndices
