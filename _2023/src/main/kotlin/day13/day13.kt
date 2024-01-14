@@ -1,150 +1,94 @@
 package day13
 
+import println
 import java.io.File
 
-fun main () {
+fun main() {
     val fileContent = File("_2023/src/main/resources/day13.txt").readText(Charsets.UTF_8).split("\n")
-    val (height, width) = Pair(fileContent.size, fileContent[0].length)
+    val result = fileContent.collectPattern()
+    result.sumOf { getMirrorPattern(it) }.println()
+}
 
-    val roundRocks = fileContent.mapIndexed { rowIndex, row ->
-        row.mapIndexed { columnIndex, value ->
-            if (value == 'O') Pair(rowIndex, columnIndex) else null
+private fun getMirrorPattern (pattern: List<String>): Int =
+    pattern.mirrorVerticalPattern() ?:
+    pattern.mirrorHorizontalPattern() ?:
+    throw Exception("No mirror pattern found")
+
+private fun List<String>.mirrorHorizontalPattern(): Int? {
+    return isMirrored(this.columnToString())?.first?.plus(1)?.times(100)
+}
+private fun List<String>.mirrorVerticalPattern(): Int? {
+    return isMirrored(this)?.first?.plus(1)
+}
+
+
+private fun isMirrored(pattern: List<String>): Pair<Int,Int>? {
+    val mirrorIndices = findMirrorIndices(pattern[0])
+    for (mirrorIndex in mirrorIndices) {
+        if (validateMirrorIndices(mirrorIndex, pattern) != null) {
+            return mirrorIndex
         }
-    }.flatten().filterNotNull().toSet()
+    }
+    return null
+}
 
-    val cubeShapedRocks = fileContent.mapIndexed { rowIndex, row ->
-        row.mapIndexed { columnIndex, value ->
-            if (value == '#') Pair(rowIndex, columnIndex) else null
+fun validateMirrorIndices (mirrorIndex: Pair<Int, Int>, pattern: List<String>): Pair<Int,Int>? {
+    val range = createRanges(mirrorIndex.first, pattern[0].length-1)
+    for (i in pattern.indices) {
+        for (j in range) {
+            if (pattern[i][j.first] != pattern[i][j.second]) {
+                return null
+            }
         }
-    }.flatten().filterNotNull().toSet()
-    var weight = 0L
-    var roundRocksNew = roundRocks
-    var roundRocksNew1 = cycle(roundRocksNew,cubeShapedRocks, height, width)
-    val seen = mutableMapOf<Int, Int>()
-    var seenState = false
-    var i = 1
-    println("roundRocks: ${roundRocks.size}")
-    while (i <= 1000000000) {
-        roundRocksNew1 = cycle(roundRocksNew1,cubeShapedRocks, height, width)
+    }
+    return mirrorIndex
+}
 
-        val state = roundRocksNew1.hashCode()
-        if(seen.containsKey(state) && !seenState) {
-            println("cycleNumber: $i")
-            val cycleLength = i - seen.getValue(state)
-            val cyclesRemaining = (1000000000 - i) % cycleLength
-            i = 1000000000 - cyclesRemaining + 2
-            println("cyclesRemaining: $cyclesRemaining")
-            seenState = true
+private fun createRanges (start: Int, max: Int): List<Pair<Int,Int>> =
+        (start downTo 0).zip((start+1)..max)
+
+fun findMirrorIndices (s: String): Set<Pair<Int, Int>> {
+    val mirrorIndices = mutableSetOf<Pair<Int, Int>>()
+    for (i in 1 until s.length/2) {
+        val left = s.substring(0, i)
+        val right = s.substring(i, i+i)
+        if (left == right.reversed()) {
+            mirrorIndices.add(Pair(i - 1, i))
+        }
+    }
+    for (i in s.length-1 downTo  s.length/2+1) {
+        val left = s.substring(i - (s.length - i), i)
+        val right = s.substring(i, s.length)
+        if (left == right.reversed()) {
+            mirrorIndices.add(Pair(i - 1, i))
+        }
+    }
+    return mirrorIndices
+}
+
+private fun countDifference (s1: String, s2: String): Int {
+    var count = 0
+    for (i in s1.indices) {
+        if (s1[i] != s2[i]) {
+            count++
+        }
+    }
+    return count
+}
+
+private fun List<String>.columnToString(): List<String> =
+        (0 until this[0].length).map { columnIndex ->
+            this.map { it[columnIndex] }.joinToString("")
+        }
+
+
+private fun List<String>.collectPattern(): List<List<String>> {
+    return this.fold(mutableListOf(mutableListOf<String>())) { acc, s ->
+        if (s.isEmpty()) {
+            acc.add(mutableListOf())
         } else {
-            seen[state] = i
-            i++
+            acc.last().add(s)
         }
-
-    }
-
-
-   // printBoard(height, width, roundRocksNew, cubeShapedRocks)
-//    println("roundRocksNew: ${roundRocksNew.size}")
-    weight = calculateWeight(roundRocksNew1, height)
-    println("weightwewerw: $weight")
-}
-
-private fun cycle(roundRocksNew1: Set<Pair<Int, Int>>,cubeShapedRocks: Set<Pair<Int, Int>>, height: Int, width: Int): Set<Pair<Int, Int>> {
-    var result = tilt('N', roundRocksNew1, cubeShapedRocks, height, width)
-    var roundRocksNew1 = result.minus(cubeShapedRocks)
-
-
-    result = tilt('W', roundRocksNew1, cubeShapedRocks, height, width)
-    roundRocksNew1 = result.minus(cubeShapedRocks)
-
-    result = tilt('S', roundRocksNew1, cubeShapedRocks, height, width)
-    roundRocksNew1 = result.minus(cubeShapedRocks)
-
-    result = tilt('E', roundRocksNew1, cubeShapedRocks, height, width)
-    roundRocksNew1 = result.minus(cubeShapedRocks)
-    //printBoard(height, width, roundRocksNew1, cubeShapedRocks)
-
-    return roundRocksNew1
-}
-
-fun tilt(direction: Char, roundRocks: Set<Pair<Int,Int>>, cubeShapedRock: Set<Pair<Int,Int>>, height: Int, width: Int): Set<Pair<Int,Int>>{
-    var nearestStone = listOf(roundRocks, cubeShapedRock).flatten()
-    return when (direction) {
-        // when direction is tilted to north, the north's element is taken first
-        'N' -> {
-            val northList = roundRocks.toList().sortedBy { it.first }
-            northList.forEach { rock ->
-                val nextLowerPair = nearestStone.filter { it.first < rock.first && it.second == rock.second}.maxByOrNull { it.first }
-                nearestStone = if (nextLowerPair != null) {
-                    nearestStone.minus(rock).plus(Pair(nextLowerPair.first + 1, rock.second))
-                } else {
-                    nearestStone.minus(rock).plus(Pair(0, rock.second))
-                }
-            }
-        return nearestStone.toSet()
-
-        }
-       'S' -> {
-           val southList = roundRocks.toList().sortedByDescending{ it.first }
-           southList.forEach { rock ->
-               val nextLowerPair = nearestStone.filter { it.first > rock.first && it.second == rock.second}.minByOrNull { it.first }
-               nearestStone = if (nextLowerPair != null) {
-                   nearestStone.minus(rock).plus(Pair(nextLowerPair.first - 1, rock.second))
-               } else {
-                   nearestStone.minus(rock).plus(Pair(height-1, rock.second))
-               }
-           }
-           return nearestStone.toSet()
-       }
-        'E' -> {
-            val eastList = roundRocks.toList().sortedByDescending{ it.second }
-
-            eastList.forEach { rock ->
-                val nextLowerPair = nearestStone.filter { it.second > rock.second && it.first == rock.first}.minByOrNull { it.second }
-                nearestStone = if (nextLowerPair != null) {
-                    nearestStone.minus(rock).plus(Pair(rock.first, nextLowerPair.second - 1))
-                } else {
-                    nearestStone.minus(rock).plus(Pair(rock.first, width-1))
-                }
-            }
-            return nearestStone.toSet()
-        }
-        'W' -> {
-            val westList = roundRocks.toList().sortedBy{ it.second }
-            westList.forEach { rock ->
-                val nextLowerPair = nearestStone.filter { it.second < rock.second && it.first == rock.first}.maxByOrNull { it.second }
-                nearestStone = if (nextLowerPair != null) {
-                    nearestStone.minus(rock).plus(Pair(rock.first, nextLowerPair.second + 1))
-                } else {
-                    nearestStone.minus(rock).plus(Pair(rock.first, 0))
-                }
-            }
-            return nearestStone.toSet()
-        }
-        else -> throw IllegalStateException("Invalid direction: $direction")
-    }
-}
-
-fun calculateWeight(roundRocks: Set<Pair<Int,Int>>, height: Int): Long {
-    var weight = 0L
-    for (row in 0 until height) {
-        val rocksInRow = roundRocks.count { it.first == row }
-        weight += rocksInRow * (height - row)
-    }
-    return weight
-}
-
-fun printBoard(height: Int, width: Int, roundRocks: Set<Pair<Int,Int>>, cubeShapedRocks: Set<Pair<Int,Int>>) {
-    for (row in 0 until height) {
-        for (column in 0 until width) {
-            if (roundRocks.contains(Pair(row, column))) {
-                print("O")
-            } else if (cubeShapedRocks.contains(Pair(row, column))) {
-                print("#")
-            } else {
-                print(".")
-            }
-        }
-        println()
+        acc
     }
 }
