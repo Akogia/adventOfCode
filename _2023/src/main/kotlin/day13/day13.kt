@@ -15,11 +15,9 @@ private fun getMirrorPattern (pattern: List<String>): Int =
     throw Exception("No mirror pattern found")
 
 private fun List<String>.mirrorHorizontalPattern(): Int? {
-    println("this Horizontal: $this")
     return isMirrored(this.columnToString())?.first?.plus(1)?.times(100)
 }
 private fun List<String>.mirrorVerticalPattern(): Int? {
-    println("this Vertical: $this")
     return isMirrored(this)?.first?.plus(1)
 }
 
@@ -37,16 +35,13 @@ private fun isMirrored(pattern: List<String>): Pair<Int,Int>? {
 fun validateMirrorIndices (mirrorIndex: Pair<Int, Int>, pattern: List<String>): Pair<Int,Int>? {
     val range = createRanges(mirrorIndex.first, pattern[0].length-1)
     var smudge = 0;
-    println("range: $range, mirrorIndex: $mirrorIndex, pattern: $pattern")
     for (i in pattern.indices) {
         for (j in range) {
             if (pattern[i][j.first] != pattern[i][j.second]) {
-                println(" pattern[i][j.first]  ${pattern[i][j.first]} != pattern[i][j.second] ${pattern[i][j.second]}")
                 smudge++
             }
         }
     }
-    println("smudge: $smudge")
     return if (smudge == 1) mirrorIndex else null
 }
 
@@ -72,16 +67,6 @@ fun findMirrorIndices (pattern: List<String>): Set<Pair<Int, Int>> {
         }
     }
     return mirrorIndices
-}
-
-private fun countDifference (s1: String, s2: String): Int {
-    var count = 0
-    for (i in s1.indices) {
-        if (s1[i] != s2[i]) {
-            count++
-        }
-    }
-    return count
 }
 
 private fun List<String>.columnToString(): List<String> =
