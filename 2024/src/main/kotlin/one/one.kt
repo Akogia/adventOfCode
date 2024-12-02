@@ -3,7 +3,7 @@ package com.ipcustomer.test.one
 import java.io.File
 
 fun main() {
-    val fileContent = File("2024/src/main/resources/one.txt").readText(Charsets.UTF_8).split('\n')
+    val fileContent = File("2024/src/main/resources/input.txt").readText(Charsets.UTF_8).split('\n')
     val firstRow = mutableListOf<Int>()
     val secondRow = mutableListOf<Int>()
 
